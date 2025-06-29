@@ -1,0 +1,20 @@
+@startuml components-callcenter
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Boundary(rateCenter, "Централизованная система ставок") {
+    Container(stakeDB, "База ставок", "MS SQL", "Хранит текущие условия по депозитам")
+    Container(exporter, "Модуль выгрузки ставок", "C# / .NET", "Формирует файл со ставками для партнёров")
+    Container(apiInternal, "API для внутренних систем", "REST API", "Предоставляет ставки кол центру банка")
+}
+
+Person(callcenterEmployee, "Оператор кол центра")
+System_Ext(crm, "CRM или портал кол центра", "Интерфейс для операторов")
+System_Ext(callcenterPartner, "Партнёрский кол центр", "Получает файл со ставками от банка")
+
+Rel(apiInternal, crm, "Отдаёт ставки по API", "JSON/HTTPS")
+Rel(crm, callcenterEmployee, "Показывает ставки")
+Rel(exporter, callcenterPartner, "Передаёт файл ставок", "CSV / email / SFTP")
+Rel(stakeDB, exporter, "Берёт данные по расписанию", "SQL")
+Rel(stakeDB, apiInternal, "Читает ставки", "SQL")
+
+@enduml

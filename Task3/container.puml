@@ -1,0 +1,25 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(client, "Клиент")
+
+System_Boundary(ibs, "Интернет-банк") {
+  Container(web, "Frontend (SPA)", "React/Angular", "Интерфейс для подачи заявок")
+  Container(api, "Backend API", ".NET Web API", "Обрабатывает заявки, подключается к БД и другим системам")
+  ContainerDb(db, "База данных ИБ", "MS SQL", "Хранит данные заявок и сессий")
+}
+
+System_Ext(core, "АБС")
+System_Ext(rate_source, "Центр. ставки")
+System_Ext(sms, "SMS шлюз")
+System_Ext(auth, "Система авторизации")
+
+Rel(client, web, "Взаимодействует через браузер", "HTTPS")
+Rel(web, api, "Вызовы REST API", "JSON/HTTPS")
+Rel(api, db, "SQL-запросы")
+Rel(api, core, "Передаёт заявки")
+Rel(api, rate_source, "Получает ставки")
+Rel(api, sms, "Отправка SMS для подтверждения")
+Rel(web, auth, "OAuth2 для авторизации", "HTTPS")
+
+@enduml

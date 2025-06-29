@@ -1,0 +1,20 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Клиент", "Открыть депозит онлайн")
+
+System(ibs, "Интернет-банк", "Веб система для клиентов банка")
+System(web_site, "Публичный сайт", "Информационный сайт банка")
+System_Ext(crm, "CRM/Кол-центр", "Обрабатывает заявки с сайта")
+System_Ext(core, "АБС", "Автоматизированная банковская система")
+System_Ext(rate_source, "Центральное хранилище ставок", "Предоставляет актуальные ставки")
+
+Rel(client, ibs, "Входит, подаёт заявку", "HTTPS")
+Rel(client, web_site, "Смотрит ставки, оставляет контакт", "HTTPS")
+
+Rel(ibs, core, "Передаёт заявку (не напрямую — через ACL)", "SOAP/REST")
+Rel(web_site, crm, "Передаёт заявку на звонок", "HTTPS")
+Rel(ibs, rate_source, "Запрашивает ставки", "REST")
+Rel(web_site, rate_source, "Запрашивает ставки", "REST")
+
+@enduml
