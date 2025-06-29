@@ -1,0 +1,17 @@
+@startuml context-callcenter
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Клиент", "Пожилой клиент банка")
+System_Ext(rateCenter, "Система ставок", "Централизованный сервис, в котором хранятся актуальные депозитные ставки")
+System_Ext(website, "Публичный сайт", "Показывает ставки клиентам")
+System_Ext(internetBank, "Интернет банк", "Подача заявок клиентами")
+System(callcenterInternal, "Внутренний кол центр", "Консультирует клиентов по телефону")
+System_Ext(callcenterPartner, "Партнёрский кол-центр", "Внешняя организация, обрабатывающая звонки от клиентов")
+
+Rel(client, callcenterInternal, "Звонит, чтобы уточнить ставки")
+Rel(client, callcenterPartner, "Звонит, если линия банка занята")
+
+Rel(rateCenter, callcenterInternal, "Предоставляет доступ к актуальным ставкам", "Внутренний API или интеграция с CRM")
+Rel(rateCenter, callcenterPartner, "Передаёт файл со ставками", "CSV или XLSX")
+
+@enduml
